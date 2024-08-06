@@ -22,12 +22,12 @@ export default [
       },
     ],
   },
-  {
-    path: '/welcome',
-    name: 'welcome',
-    icon: 'smile',
-    component: './Welcome',
-  },
+  // {
+  //   path: '/welcome',
+  //   name: 'welcome',
+  //   icon: 'smile',
+  //   component: './Welcome',
+  // },
   // {
   //   path: '/admin',
   //   name: 'admin',
@@ -52,7 +52,7 @@ export default [
     routes: [
       {
         path: '/tools',
-        redirect: '/tools/sub-page',
+        redirect: '/tools/autovoice',
       },
       {
         path: '/tools/autovoice',
@@ -69,7 +69,7 @@ export default [
   // },
   {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/tools',
   },
   {
     path: '*',
