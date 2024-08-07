@@ -2,15 +2,15 @@ name: embed release prod
 
 on:
   push:
-    branches: [staging-embed]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: 'read'
-      id-token: 'write'
+      contents: "read"
+      id-token: "write"
     strategy:
       matrix:
         node-version: [18]
@@ -30,11 +30,13 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: 'pnpm install'
+        run: "pnpm install"
 
-      - name: Build 
-        run: 'pnpm run --filter alva-embed build
-        env:
+      - name: Build
+        run: "pnpm build --filter my-app"
 
-
-
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          publish_dir: ./apps/my-app/dist
