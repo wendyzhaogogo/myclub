@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="450" viewBox="0 0 800 450" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景 -->
+  <rect width="800" height="450" fill="#F3F4F6"/>
+  
+  <!-- 卡片网格 -->
+  <g transform="translate(200, 100)">
+    <!-- 第一行 -->
+    <rect x="0" y="0" width="80" height="80" rx="8" fill="white" stroke="#E5E7EB" stroke-width="2"/>
+    <text x="40" y="50" font-family="Arial" font-size="32" text-anchor="middle" fill="#1F2937">日</text>
+    
+    <rect x="100" y="0" width="80" height="80" rx="8" fill="white" stroke="#E5E7EB" stroke-width="2"/>
+    <text x="140" y="50" font-family="Arial" font-size="32" text-anchor="middle" fill="#1F2937">月</text>
+    
+    <rect x="200" y="0" width="80" height="80" rx="8" fill="white" stroke="#E5E7EB" stroke-width="2"/>
+    <text x="240" y="50" font-family="Arial" font-size="32" text-anchor="middle" fill="#1F2937">山</text>
+    
+    <rect x="300" y="0" width="80" height="80" rx="8" fill="white" stroke="#E5E7EB" stroke-width="2"/>
+    <text x="340" y="50" font-family="Arial" font-size="32" text-anchor="middle" fill="#1F2937">水</text>
+    
+    <!-- 第二行 -->
+    <rect x="0" y="100" width="80" height="80" rx="8" fill="white" stroke="#E5E7EB" stroke-width="2"/>
+    <text x="40" y="150" font-family="Arial" font-size="32" text-anchor="middle" fill="#1F2937">火</text>
+    
+    <rect x="100" y="100" width="80" height="80" rx="8" fill="white" stroke="#E5E7EB" stroke-width="2"/>
+    <text x="140" y="150" font-family="Arial" font-size="32" text-anchor="middle" fill="#1F2937">木</text>
+    
+    <rect x="200" y="100" width="80" height="80" rx="8" fill="white" stroke="#E5E7EB" stroke-width="2"/>
+    <text x="240" y="150" font-family="Arial" font-size="32" text-anchor="middle" fill="#1F2937">人</text>
+    
+    <rect x="300" y="100" width="80" height="80" rx="8" fill="white" stroke="#E5E7EB" stroke-width="2"/>
+    <text x="340" y="150" font-family="Arial" font-size="32" text-anchor="middle" fill="#1F2937">口</text>
+  </g>
+  
+  <!-- 标题 -->
+  <text x="400" y="50" font-family="Arial" font-size="24" font-weight="bold" text-anchor="middle" fill="#1F2937">汉字连连看</text>
+</svg> 

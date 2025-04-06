@@ -1,0 +1,94 @@
+{
+  "app": {
+    "name": "My Club",
+    "description": "A platform for resource sharing and learning"
+  },
+  "nav": {
+    "home": "Home",
+    "resources": "Resources",
+    "myResources": "My Resources",
+    "profile": "Profile",
+    "notifications": "Notifications",
+    "games": "Games"
+  },
+  "common": {
+    "myResources": "My Resources",
+    "resourceSharing": "Resource Sharing",
+    "language": "Language",
+    "chinese": "Chinese",
+    "vietnamese": "Vietnamese",
+    "english": "English",
+    "search": "Search",
+    "upload": "Upload",
+    "download": "Download",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  },
+  "myResources": {
+    "title": "My Resources",
+    "description": "Here you can view your saved and uploaded resources",
+    "upload": "Upload Resource",
+    "favorites": "Favorites",
+    "recent": "Recent",
+    "shared": "Shared",
+    "private": "Private",
+    "public": "Public"
+  },
+  "resourceSharing": {
+    "title": "Resource Sharing",
+    "description": "Browse and share learning resources",
+    "search": "Search Resources",
+    "categories": "Categories",
+    "popular": "Popular Resources",
+    "newest": "Newest Resources",
+    "all": "All Resources",
+    "filter": "Filter",
+    "sort": "Sort By",
+    "view": "View",
+    "download": "Download",
+    "share": "Share"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password?",
+    "rememberMe": "Remember Me",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "username": "Username"
+  },
+  "profile": {
+    "title": "Profile",
+    "edit": "Edit Profile",
+    "settings": "Settings",
+    "account": "Account",
+    "security": "Security",
+    "notifications": "Notifications",
+    "preferences": "Preferences",
+    "save": "Save Changes"
+  },
+  "games": {
+    "title": "Games",
+    "hanziMatch2D": {
+      "title": "Hanzi Match 2D",
+      "description": "A 2D Chinese character matching game implemented with D3.js, featuring drag-and-drop and click interactions"
+    },
+    "hanziMatch3D": {
+      "title": "Hanzi Match 3D",
+      "description": "Match pairs of Chinese characters",
+      "moves": "Moves",
+      "restart": "Restart",
+      "complete": "Congratulations! You completed the game in {{moves}} moves!"
+    }
+  }
+}
