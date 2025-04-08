@@ -399,7 +399,7 @@ const ChineseCharacterGame3D: React.FC = () => {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 w-full h-full overflow-hidden bg-gradient-to-br from-pink-100 via-pink-200 to-pink-300"
+      className="relative w-full h-full overflow-hidden bg-gradient-to-br from-pink-100 via-pink-200 to-pink-300"
     >
       <canvas ref={canvasRef} className="w-full h-full block" />
     </div>
