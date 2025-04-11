@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import * as PIXI from "pixi.js";
 import { phraseList } from "../../config/gameTexts";
+import { getPrefixedPath, openWindow } from '../../utils/path';
 
 interface TextBlock {
   char: string;
@@ -471,7 +472,7 @@ class ChineseCharacterGame {
     button.cursor = "pointer";
 
     button.on("pointerdown", () => {
-      window.open("/phrases-learning", "_blank");
+      openWindow("/phrases-learning");
     });
 
     this.app.stage.addChild(button);

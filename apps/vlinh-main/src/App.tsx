@@ -10,9 +10,11 @@ import HanziMatch2D from "./components/games/ChineseCharacterGame2D";
 import HanziMatch3D from "./pages/games/HanziMatch3D";
 import PhrasesLearning from './pages/PhrasesLearning';
 
+const isProduction = import.meta.env.PROD;
+
 const App: React.FC = () => {
   return (
-    <Router>
+    <Router basename={isProduction ? '/myclub' : '/'}>
       <Routes>
         <Route
           path="/"

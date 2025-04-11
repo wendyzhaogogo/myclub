@@ -81,8 +81,6 @@ const ChineseCharacterGame3D: React.FC = () => {
     const gridSize = 5; // 5x5 网格
     const blockSize = 4; // 方块大小
     const spacing = blockSize * 1.2; // 方块之间的间距
-    const totalWidth = gridSize * spacing;
-    const totalHeight = gridSize * spacing;
 
     // 创建文字几何体
     const loader = new FontLoader();
@@ -374,7 +372,7 @@ const ChineseCharacterGame3D: React.FC = () => {
       ref={containerRef}
       className="relative w-full h-full overflow-hidden bg-gradient-to-br from-pink-100 via-pink-200 to-pink-300"
     >
-      <canvas ref={canvasRef} className="w-full h-full block" />
+      <canvas ref={canvasRef} className="block w-full h-full" />
     </div>
   );
 };

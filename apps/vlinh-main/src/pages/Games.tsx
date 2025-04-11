@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { openWindow } from '../utils/path';
 
 const Games: React.FC = () => {
   const { t } = useTranslation();
@@ -20,7 +21,7 @@ const Games: React.FC = () => {
   ];
 
   const handleGameClick = (gameId: string) => {
-    window.open(`/games/${gameId}`, "_blank", "noopener,noreferrer");
+    openWindow(`/games/${gameId}`, "_blank", "noopener,noreferrer");
   };
 
   return (
