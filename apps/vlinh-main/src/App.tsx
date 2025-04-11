@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NavbarLayout from "./components/layouts/NavbarLayout";
 import GameLayout from "./components/layouts/GameLayout";
@@ -7,8 +8,9 @@ import MyResources from "./pages/MyResources";
 import Games from "./pages/Games";
 import HanziMatch2D from "./components/games/ChineseCharacterGame2D";
 import HanziMatch3D from "./pages/games/HanziMatch3D";
+import PhrasesLearning from './pages/PhrasesLearning';
 
-function App() {
+const App: React.FC = () => {
   return (
     <Router>
       <Routes>
@@ -60,9 +62,10 @@ function App() {
             </GameLayout>
           }
         />
+        <Route path="/phrases-learning" element={<PhrasesLearning />} />
       </Routes>
     </Router>
   );
-}
+};
 
 export default App;

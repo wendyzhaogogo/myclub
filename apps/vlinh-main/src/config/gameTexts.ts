@@ -29,5 +29,34 @@ export const gameTexts: GameText[] = [
   { id: 22, char: "福", description: "表示幸福、福气" },
   { id: 23, char: "寿", description: "表示长寿、寿命" },
   { id: 24, char: "康", description: "表示健康、安康" },
-  { id: 25, char: "宁", description: "表示安宁、宁静" }
-]; 
+  { id: 25, char: "宁", description: "表示安宁、宁静" },
+];
+
+export const phraseList = [
+  { id: 1, phrase: "东边", pinyin: "dōng biān", vietnamese: "phía đông" },
+  { id: 2, phrase: "书店", pinyin: "shū diàn", vietnamese: "hiệu sách" },
+  { id: 3, phrase: "儿子", pinyin: "ér zi", vietnamese: "con trai" },
+  { id: 4, phrase: "儿歌", pinyin: "ér gē", vietnamese: "bài hát thiếu nhi" },
+  { id: 5, phrase: "出去", pinyin: "chū qù", vietnamese: "ra ngoài" },
+  { id: 6, phrase: "包子", pinyin: "bāo zi", vietnamese: "bánh bao" },
+  { id: 7, phrase: "吃饭", pinyin: "chī fàn", vietnamese: "ăn cơm" },
+  { id: 8, phrase: "唱歌", pinyin: "chàng gē", vietnamese: "hát" },
+  { id: 9, phrase: "多少", pinyin: "duō shǎo", vietnamese: "bao nhiêu" },
+  { id: 10, phrase: "大学", pinyin: "dà xué", vietnamese: "đại học" },
+  { id: 11, phrase: "好吃", pinyin: "hǎo chī", vietnamese: "ngon" },
+  { id: 12, phrase: "工作", pinyin: "gōng zuò", vietnamese: "công việc / làm việc" },
+  { id: 13, phrase: "帮忙", pinyin: "bāng máng", vietnamese: "giúp đỡ" },
+  { id: 14, phrase: "开车", pinyin: "kāi chē", vietnamese: "lái xe" },
+  { id: 15, phrase: "打包", pinyin: "dǎ bāo", vietnamese: "gói mang về" },
+  { id: 16, phrase: "打开", pinyin: "dǎ kāi", vietnamese: "mở ra" },
+  { id: 17, phrase: "打车", pinyin: "dǎ chē", vietnamese: "gọi xe / bắt taxi" },
+  { id: 18, phrase: "放学", pinyin: "fàng xué", vietnamese: "tan học" },
+  { id: 19, phrase: "爱好", pinyin: "ài hào", vietnamese: "sở thích" },
+  { id: 20, phrase: "白天", pinyin: "bái tiān", vietnamese: "ban ngày" },
+  { id: 21, phrase: "白饭", pinyin: "bái fàn", vietnamese: "cơm trắng" },
+  { id: 22, phrase: "读书", pinyin: "dú shū", vietnamese: "đọc sách" },
+  { id: 23, phrase: "非常", pinyin: "fēi cháng", vietnamese: "rất" },
+  { id: 24, phrase: "飞机", pinyin: "fēi jī", vietnamese: "máy bay" },
+  { id: 25, phrase: "饭店", pinyin: "fàn diàn", vietnamese: "nhà hàng / khách sạn" },
+  { id: 26, phrase: "高兴", pinyin: "gāo xìng", vietnamese: "vui vẻ" },
+];
