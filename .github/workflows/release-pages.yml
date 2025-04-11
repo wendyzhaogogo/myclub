@@ -1,4 +1,4 @@
-name: embed release prod
+name: release-pages
 
 on:
   push:

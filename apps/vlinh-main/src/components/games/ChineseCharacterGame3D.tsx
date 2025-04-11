@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js";
@@ -22,7 +22,6 @@ const ChineseCharacterGame3D: React.FC = () => {
   const cameraRef = useRef<THREE.OrthographicCamera | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const textBlocksRef = useRef<TextBlock[]>([]);
-  const [highlightedIds, setHighlightedIds] = useState<number[]>([]);
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
   const controlsRef = useRef<OrbitControls | null>(null);
@@ -84,23 +83,6 @@ const ChineseCharacterGame3D: React.FC = () => {
     const spacing = blockSize * 1.2; // 方块之间的间距
     const totalWidth = gridSize * spacing;
     const totalHeight = gridSize * spacing;
-
-    // 计算起始位置（使网格居中）
-    const startX = -totalWidth / 2 + spacing / 2;
-    const startY = totalHeight / 2 - spacing / 2;
-
-    // 检查位置是否重叠
-    const isPositionOverlap = (
-      pos: { x: number; y: number },
-      blocks: TextBlock[],
-      minDist: number
-    ) => {
-      return blocks.some((block) => {
-        const dx = pos.x - block.mesh.position.x;
-        const dy = pos.y - block.mesh.position.y;
-        return Math.sqrt(dx * dx + dy * dy) < minDist;
-      });
-    };
 
     // 创建文字几何体
     const loader = new FontLoader();
@@ -368,15 +350,6 @@ const ChineseCharacterGame3D: React.FC = () => {
             } else {
               // 确保最终回到原始角度
               clickedBlock.mesh.rotation.x = originalRotation;
-
-              // 更新高亮状态
-              setHighlightedIds((prev) => {
-                if (prev.includes(clickedBlock.id)) {
-                  return prev.filter((id) => id !== clickedBlock.id);
-                } else {
-                  return [...prev, clickedBlock.id];
-                }
-              });
             }
           };
 
