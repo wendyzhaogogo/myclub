@@ -1,14 +1,23 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import path from 'path'
+import { resolve } from 'path'
+import checker from 'vite-plugin-checker'
+
+const isProduction = process.env.NODE_ENV === 'production';
+const basePath = isProduction ? '/myclub/' : '/';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: process.env.NODE_ENV === 'production' ? '/myclub/' : '/',
-  plugins: [react()],
+  base: basePath,
+  plugins: [
+    react(),
+    checker({
+      typescript: true,
+    }),
+  ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': resolve(__dirname, './src'),
     },
   },
   css: {

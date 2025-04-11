@@ -1,20 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import * as PIXI from "pixi.js";
-import { phraseList } from "../../config/gameTexts";
-import { getPrefixedPath, openWindow } from '../../utils/path';
+import { Phrase } from "../../config/gameTexts";
+import { openWindow as newOpenWindow } from "../../utils/env";
+import { useTranslation } from "react-i18next";
 
 interface TextBlock {
   char: string;
   id: number;
 }
 
-const gameTextsInBlocks: TextBlock[] = phraseList
-  .map((item) => item.phrase.split(""))
-  .flat()
-  .map((char, index) => ({
-    char,
-    id: index,
-  }));
+interface ChineseCharacterGame2DProps {
+  phrases: Phrase[];
+}
 
 class ChineseCharacterGame {
   private app: PIXI.Application;
@@ -29,17 +26,20 @@ class ChineseCharacterGame {
   private readonly SLOT_COUNT = 6;
   private slots: PIXI.Container[] = [];
   private textBlocks: PIXI.Container[] = [];
-  private currentSlotIndex: number = 0;
   private columns: number = 0;
   private rows: number = 0;
   private slotContents: (PIXI.Container | null)[] = [];
   private matchedPhrases: string[] = [];
-  // @ts-ignore - isAnimating is used in animation logic
-  private isAnimating: boolean = false;
+  private gameTexts: Phrase[] = [];
+  private gameId: string;
+  private t: (key: string) => string;
 
-  constructor(container: HTMLDivElement) {
+  constructor(container: HTMLDivElement, phrases: Phrase[], t: (key: string) => string) {
     this.container = container;
     this.app = new PIXI.Application();
+    this.gameTexts = phrases;
+    this.gameId = this.gameTexts[0]?.id.toString() || "1";
+    this.t = t;
   }
 
   private calculateDimensions() {
@@ -54,29 +54,40 @@ class ChineseCharacterGame {
     const availableWidth = maxWidth - 2 * this.MARGIN;
     const availableHeight = maxHeight - slotAreaHeight - 2 * this.MARGIN;
 
-    // 计算最佳的行列数
-    const totalBlocks = gameTextsInBlocks.length;
-    this.columns = Math.ceil(Math.sqrt(totalBlocks));
-    this.rows = Math.ceil(totalBlocks / this.columns);
+    // 计算所有字符的总数
+    const totalBlocks = this.gameTexts.reduce(
+      (sum, phrase) => sum + phrase.phrase.length,
+      0
+    );
 
-    // 计算块大小，确保不会超出可用空间
-    const maxBlockWidth = Math.floor(availableWidth / (this.columns + (this.columns - 1) * this.SPACING_RATIO));
-    const maxBlockHeight = Math.floor(availableHeight / (this.rows + (this.rows - 1) * this.SPACING_RATIO));
+    // 计算最佳的行列数，确保是n×n的正方形
+    const squareSize = Math.ceil(Math.sqrt(totalBlocks));
+    this.columns = squareSize;
+    this.rows = squareSize;
+
+    // 使用较小的边作为基准来计算块大小，防止溢出
+    const minDimension = Math.min(availableWidth, availableHeight);
+    const maxBlockSize = Math.floor(
+      minDimension / (this.columns + (this.columns - 1) * this.SPACING_RATIO)
+    );
 
     // 计算槽的最大可能大小
-    const maxSlotWidth = Math.floor((maxWidth - 2 * this.MARGIN) / (this.SLOT_COUNT + (this.SLOT_COUNT - 1) * this.SPACING_RATIO));
+    const maxSlotWidth = Math.floor(
+      (maxWidth - 2 * this.MARGIN) /
+        (this.SLOT_COUNT + (this.SLOT_COUNT - 1) * this.SPACING_RATIO)
+    );
 
     // 取较小的值确保是正方形，并且考虑底部槽区域
-    this.blockSize = Math.min(maxBlockWidth, maxBlockHeight, maxSlotWidth);
+    this.blockSize = Math.min(maxBlockSize, maxSlotWidth);
     this.spacing = Math.floor(this.blockSize * this.SPACING_RATIO);
 
-    // 计算文本块区域的总宽度和高度
-    const totalWidth = this.columns * this.blockSize + (this.columns - 1) * this.spacing;
-    const totalHeight = this.rows * this.blockSize + (this.rows - 1) * this.spacing;
+    // 计算文本块区域的总宽度和高度（应该是相等的）
+    const totalSize =
+      this.columns * this.blockSize + (this.columns - 1) * this.spacing;
 
-    // 居中定位文本块区域，考虑底部槽区域
-    this.startX = Math.floor((maxWidth - totalWidth) / 2);
-    this.startY = Math.floor((availableHeight - totalHeight) / 2);
+    // 居中定位文本块区域，确保不会与底部槽区域重叠
+    this.startX = Math.floor((maxWidth - totalSize) / 2);
+    this.startY = Math.floor((availableHeight - totalSize) / 2);
 
     return {
       slotAreaHeight,
@@ -85,18 +96,26 @@ class ChineseCharacterGame {
     };
   }
 
-  private createSlots(slotAreaHeight: number, maxWidth: number, maxHeight: number) {
+  private createSlots(
+    slotAreaHeight: number,
+    maxWidth: number,
+    maxHeight: number
+  ) {
     if (!this.app.stage) return;
 
     this.slots = [];
     this.slotContents = new Array(this.SLOT_COUNT).fill(null);
-    
+
     // 计算槽的总宽度，确保不会超出容器宽度
-    const slotTotalWidth = this.SLOT_COUNT * this.blockSize + (this.SLOT_COUNT - 1) * this.spacing;
+    const slotTotalWidth =
+      this.SLOT_COUNT * this.blockSize + (this.SLOT_COUNT - 1) * this.spacing;
     const slotStartX = Math.floor((maxWidth - slotTotalWidth) / 2);
-    
+
     // 计算槽的垂直位置，确保在底部区域内
-    const slotY = maxHeight - slotAreaHeight + Math.floor((slotAreaHeight - this.blockSize) / 2);
+    const slotY =
+      maxHeight -
+      slotAreaHeight +
+      Math.floor((slotAreaHeight - this.blockSize) / 2);
 
     for (let i = 0; i < this.SLOT_COUNT; i++) {
       const container = new PIXI.Container();
@@ -118,6 +137,8 @@ class ChineseCharacterGame {
   }
 
   private checkPhraseMatch() {
+    if (!this.app.stage) return;
+
     // 获取当前槽中的所有字符
     const currentPhrase = this.slotContents
       .filter((block): block is PIXI.Container => block !== null)
@@ -128,24 +149,24 @@ class ChineseCharacterGame {
       .join("");
 
     // 检查是否匹配任何词组
-    for (const phraseItem of phraseList) {
+    for (const phraseItem of this.gameTexts) {
       const phrase = phraseItem.phrase;
       if (this.matchedPhrases.includes(phrase)) continue; // 跳过已匹配的词组
-      
+
       const index = currentPhrase.indexOf(phrase);
       if (index !== -1) {
         // 找到匹配的词组，获取匹配的文字块
         const matchedBlocks = this.slotContents
           .slice(index, index + phrase.length)
           .filter((block): block is PIXI.Container => block !== null);
-        
+
         if (matchedBlocks.length === phrase.length) {
           // 播放消失动画
           this.animatePhraseDisappearance(matchedBlocks);
           this.matchedPhrases.push(phrase);
-          
+
           // 检查游戏是否结束
-          if (this.matchedPhrases.length === phraseList.length) {
+          if (this.matchedPhrases.length === this.gameTexts.length) {
             this.showCompletionScreen();
           }
           break;
@@ -189,7 +210,7 @@ class ChineseCharacterGame {
         // 立即重新排列槽中的文本块
         const newSlotContents: (PIXI.Container | null)[] = [];
         let currentIndex = 0;
-        
+
         // 将非空的文本块移到前面
         for (let i = 0; i < this.slotContents.length; i++) {
           if (this.slotContents[i]) {
@@ -197,7 +218,7 @@ class ChineseCharacterGame {
             currentIndex++;
           }
         }
-        
+
         // 填充剩余位置为 null
         while (currentIndex < this.slotContents.length) {
           newSlotContents[currentIndex] = null;
@@ -206,7 +227,6 @@ class ChineseCharacterGame {
 
         // 更新槽内容和位置
         this.slotContents = newSlotContents;
-        this.currentSlotIndex = this.slotContents.findIndex((block) => block === null);
 
         // 重新排列所有文本块的位置
         this.slotContents.forEach((block, index) => {
@@ -221,7 +241,7 @@ class ChineseCharacterGame {
     requestAnimationFrame(animate);
   }
 
-  private animateToSlot(block: PIXI.Container, slot: PIXI.Container) {
+  private animateToSlot(block: PIXI.Container, slot: PIXI.Container, onComplete?: () => void) {
     const startX = block.x;
     const startY = block.y;
     const endX = slot.x;
@@ -229,15 +249,24 @@ class ChineseCharacterGame {
     const duration = 1000;
     const startTime = performance.now();
 
-    // 只禁用当前文本块的交互性
-    block.interactive = false;
-    block.cursor = "default";
+    // 禁用所有文本块的交互性
+    this.textBlocks.forEach(block => {
+      block.interactive = false;
+      block.cursor = "default";
+    });
 
     // 将文字块移到最上层
     if (this.app.stage) {
       this.app.stage.removeChild(block);
       this.app.stage.addChild(block);
     }
+
+    // 立即更新槽位状态，防止其他文本块移动到同一个槽位
+    const slotIndex = this.slots.indexOf(slot);
+    this.slotContents[slotIndex] = block;
+
+    // 标记文本块为已放置状态
+    (block as any).isPlaced = true;
 
     const animate = (currentTime: number) => {
       const elapsed = currentTime - startTime;
@@ -252,12 +281,21 @@ class ChineseCharacterGame {
       if (progress < 1) {
         requestAnimationFrame(animate);
       } else {
-        // 动画完成后，将文字块添加到槽中
-        const slotIndex = this.slots.indexOf(slot);
-        this.slotContents[slotIndex] = block;
-        
+        // 动画完成后，只重新启用未放置的文本块的交互性
+        this.textBlocks.forEach(block => {
+          if (!(block as any).isPlaced) {
+            block.interactive = true;
+            block.cursor = "pointer";
+          }
+        });
+
         // 检查是否形成词组
         this.checkPhraseMatch();
+
+        // 调用完成回调
+        if (onComplete) {
+          onComplete();
+        }
       }
     };
 
@@ -337,23 +375,53 @@ class ChineseCharacterGame {
     }
 
     this.textBlocks = [];
-    
+
+    const gameTextsInBlocks: TextBlock[] = this.gameTexts
+      .map((item) => item.phrase.split(""))
+      .flat()
+      .map((char, index) => ({
+        char,
+        id: index,
+      }));
+
     // 打乱文本块顺序
     const shuffledTexts = [...gameTextsInBlocks];
     for (let i = shuffledTexts.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [shuffledTexts[i], shuffledTexts[j]] = [shuffledTexts[j], shuffledTexts[i]];
+      [shuffledTexts[i], shuffledTexts[j]] = [
+        shuffledTexts[j],
+        shuffledTexts[i],
+      ];
     }
 
-    shuffledTexts.forEach((text, index) => {
-      const row = Math.floor(index / this.columns);
-      const col = index % this.columns;
+    // 创建一个包含所有可能位置的数组
+    const totalPositions = this.columns * this.rows;
+    const positions = Array.from({ length: totalPositions }, (_, i) => i);
+
+    // 随机选择要留空的位置
+    const emptyPositions = new Set<number>();
+    while (emptyPositions.size < totalPositions - shuffledTexts.length) {
+      const randomIndex = Math.floor(Math.random() * positions.length);
+      emptyPositions.add(positions[randomIndex]);
+      positions.splice(randomIndex, 1);
+    }
+
+    // 创建文本块，跳过留空的位置
+    let textIndex = 0;
+    for (let i = 0; i < totalPositions; i++) {
+      if (emptyPositions.has(i)) {
+        continue; // 跳过留空的位置
+      }
+
+      const row = Math.floor(i / this.columns);
+      const col = i % this.columns;
+      const text = shuffledTexts[textIndex++];
 
       const container = new PIXI.Container();
       this.app.stage.addChild(container);
 
       const background = new PIXI.Graphics();
-      background.fill({ color: this.getCardColor(index) });
+      background.fill({ color: this.getCardColor(i) });
       background.roundRect(0, 0, this.blockSize, this.blockSize, 4);
       background.fill();
       container.addChild(background);
@@ -363,11 +431,13 @@ class ChineseCharacterGame {
       border.roundRect(1, 1, this.blockSize - 2, this.blockSize - 2, 3);
       container.addChild(border);
 
+      // 计算合适的字体大小
+      const fontSize = Math.floor(this.blockSize * 0.4);
       const textElement = new PIXI.BitmapText({
         text: text.char,
         style: {
           fontFamily: "Arial",
-          fontSize: this.blockSize * 0.4,
+          fontSize: fontSize,
           fill: 0x000000,
           align: "center",
           fontWeight: "bold",
@@ -381,19 +451,27 @@ class ChineseCharacterGame {
       container.x = this.startX + col * (this.blockSize + this.spacing);
       container.y = this.startY + row * (this.blockSize + this.spacing);
 
+      // 初始化文本块为未放置状态
+      (container as any).isPlaced = false;
       container.interactive = true;
       container.cursor = "pointer";
 
       container.on("pointerdown", () => {
-        if (this.currentSlotIndex < this.slots.length) {
-          const targetSlot = this.slots[this.currentSlotIndex];
+        // 如果文本块已经放置，则忽略点击
+        if ((container as any).isPlaced) {
+          return;
+        }
+
+        // 找到第一个空槽的位置
+        const emptySlotIndex = this.slotContents.findIndex(slot => slot === null);
+        if (emptySlotIndex !== -1) {
+          const targetSlot = this.slots[emptySlotIndex];
           this.animateToSlot(container, targetSlot);
-          this.currentSlotIndex++;
         }
       });
 
       this.textBlocks.push(container);
-    });
+    }
   }
 
   private async showCompletionScreen() {
@@ -402,13 +480,20 @@ class ChineseCharacterGame {
     // 创建半透明背景
     const background = new PIXI.Graphics();
     background.fill({ color: 0x000000, alpha: 0.7 });
-    background.rect(0, 0, this.container.clientWidth, this.container.clientHeight);
+    background.rect(
+      0,
+      0,
+      this.container.clientWidth,
+      this.container.clientHeight
+    );
     background.fill();
     this.app.stage.addChild(background);
 
     try {
       // 加载大拇指图标
-      const thumbsUpTexture = await PIXI.Assets.load('https://cdn-icons-png.flaticon.com/512/2583/2583344.png');
+      const thumbsUpTexture = await PIXI.Assets.load(
+        "https://cdn-icons-png.flaticon.com/512/2583/2583344.png"
+      );
       const thumbsUp = PIXI.Sprite.from(thumbsUpTexture);
       thumbsUp.anchor.set(0.5);
       thumbsUp.scale.set(0.5); // 调整大小
@@ -425,12 +510,12 @@ class ChineseCharacterGame {
       };
       this.app.ticker.add(animate);
     } catch (error) {
-      console.error('Failed to load thumbs up image:', error);
+      console.error("Failed to load thumbs up image:", error);
     }
 
     // 创建恭喜文字
     const congratsText = new PIXI.BitmapText({
-      text: "Congratulations! You're amazing!",
+      text: this.t("games.hanziMatch2D.congratulations"),
       style: {
         fontFamily: "Arial",
         fontSize: 48,
@@ -447,13 +532,13 @@ class ChineseCharacterGame {
     // 创建学习按钮
     const button = new PIXI.Container();
     const buttonBackground = new PIXI.Graphics();
-    buttonBackground.fill({ color: 0x4CAF50 });
+    buttonBackground.fill({ color: 0x4caf50 });
     buttonBackground.roundRect(0, 0, 250, 50, 10);
     buttonBackground.fill();
     button.addChild(buttonBackground);
 
     const buttonText = new PIXI.BitmapText({
-      text: "Let's Learn These Words",
+      text: this.t("games.hanziMatch2D.learnWords"),
       style: {
         fontFamily: "Arial",
         fontSize: 20,
@@ -472,7 +557,7 @@ class ChineseCharacterGame {
     button.cursor = "pointer";
 
     button.on("pointerdown", () => {
-      openWindow("/phrases-learning");
+      newOpenWindow(`/phrases-learning/${this.gameId}`);
     });
 
     this.app.stage.addChild(button);
@@ -484,12 +569,11 @@ class ChineseCharacterGame {
 
     // 清除所有元素
     this.app.stage.removeChildren();
-    
+
     // 重置游戏状态
     this.matchedPhrases = [];
-    this.currentSlotIndex = 0;
     this.slotContents = new Array(this.SLOT_COUNT).fill(null);
-    
+
     // 重新创建游戏元素
     const { slotAreaHeight, maxWidth, maxHeight } = this.calculateDimensions();
     this.createTextBlocks();
@@ -525,7 +609,8 @@ class ChineseCharacterGame {
         throw new Error("Failed to initialize PIXI stage");
       }
 
-      const { slotAreaHeight, maxWidth, maxHeight } = this.calculateDimensions();
+      const { slotAreaHeight, maxWidth, maxHeight } =
+        this.calculateDimensions();
       this.createTextBlocks();
       this.createSlots(slotAreaHeight, maxWidth, maxHeight);
 
@@ -555,9 +640,9 @@ class ChineseCharacterGame {
 
     // 重置游戏状态
     this.matchedPhrases = [];
-    this.currentSlotIndex = 0;
     this.slotContents = new Array(this.SLOT_COUNT).fill(null);
 
+    // 重新创建游戏元素
     this.createTextBlocks();
     this.createSlots(slotAreaHeight, maxWidth, maxHeight);
   };
@@ -590,13 +675,15 @@ class ChineseCharacterGame {
   }
 }
 
-const ChineseCharacterGame2D: React.FC = () => {
+const ChineseCharacterGame2D: React.FC<ChineseCharacterGame2DProps> = ({
+  phrases,
+}) => {
   const [isLoading, setIsLoading] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
-    const container = document.querySelector(
-      ".game-container"
-    ) as HTMLDivElement;
+    const container = containerRef.current;
     if (!container) return;
 
     let game: ChineseCharacterGame | null = null;
@@ -604,7 +691,7 @@ const ChineseCharacterGame2D: React.FC = () => {
     const initGame = async () => {
       try {
         setIsLoading(true);
-        game = new ChineseCharacterGame(container);
+        game = new ChineseCharacterGame(container, phrases, t);
         await game.init();
       } catch (error) {
         console.error("Failed to initialize game:", error);
@@ -621,18 +708,18 @@ const ChineseCharacterGame2D: React.FC = () => {
         game = null;
       }
     };
-  }, []);
+  }, [phrases, t]);
 
   return (
     <div className="relative w-full h-full">
-      <div className="absolute inset-0 game-container" />
+      <div className="absolute inset-0" ref={containerRef} />
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80">
           <div className="text-center">
             <div className="w-8 h-8 mx-auto mb-2 border-4 border-blue-500 rounded-full border-t-transparent animate-spin" />
-            <p className="text-gray-600">加载中...</p>
+            <p className="text-gray-600">{t("games.hanziMatch2D.loading")}</p>
           </div>
-      </div>
+        </div>
       )}
     </div>
   );

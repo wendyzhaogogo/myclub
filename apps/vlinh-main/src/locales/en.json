@@ -81,11 +81,16 @@
     "title": "Games",
     "hanziMatch2D": {
       "title": "Hanzi Match 2D",
-      "description": "A 2D Chinese character matching game implemented with D3.js, featuring drag-and-drop and click interactions"
+      "description": "Match Chinese characters to form words in this interactive 2D game. Test your vocabulary knowledge and improve your Chinese character recognition skills.",
+      "loading": "Loading...",
+      "congratulations": "Congratulations! You're amazing!",
+      "learnWords": "Let's Learn These Words",
+      "vocabularySet": "Vocabulary Set {{id}}",
+      "vocabularyCount": "{{count}} words"
     },
     "hanziMatch3D": {
       "title": "Hanzi Match 3D",
-      "description": "Match pairs of Chinese characters",
+      "description": "Explore and interact with Chinese characters in a 3D environment. Click on characters to see them rotate and learn their meanings in an immersive way.",
       "moves": "Moves",
       "restart": "Restart",
       "complete": "Congratulations! You completed the game in {{moves}} moves!"

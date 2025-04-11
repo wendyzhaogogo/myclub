@@ -32,31 +32,49 @@ export const gameTexts: GameText[] = [
   { id: 25, char: "宁", description: "表示安宁、宁静" },
 ];
 
-export const phraseList = [
-  { id: 1, phrase: "东边", pinyin: "dōng biān", vietnamese: "phía đông" },
-  { id: 2, phrase: "书店", pinyin: "shū diàn", vietnamese: "hiệu sách" },
-  { id: 3, phrase: "儿子", pinyin: "ér zi", vietnamese: "con trai" },
-  { id: 4, phrase: "儿歌", pinyin: "ér gē", vietnamese: "bài hát thiếu nhi" },
-  { id: 5, phrase: "出去", pinyin: "chū qù", vietnamese: "ra ngoài" },
-  { id: 6, phrase: "包子", pinyin: "bāo zi", vietnamese: "bánh bao" },
-  { id: 7, phrase: "吃饭", pinyin: "chī fàn", vietnamese: "ăn cơm" },
-  { id: 8, phrase: "唱歌", pinyin: "chàng gē", vietnamese: "hát" },
-  { id: 9, phrase: "多少", pinyin: "duō shǎo", vietnamese: "bao nhiêu" },
-  { id: 10, phrase: "大学", pinyin: "dà xué", vietnamese: "đại học" },
-  { id: 11, phrase: "好吃", pinyin: "hǎo chī", vietnamese: "ngon" },
-  { id: 12, phrase: "工作", pinyin: "gōng zuò", vietnamese: "công việc / làm việc" },
-  { id: 13, phrase: "帮忙", pinyin: "bāng máng", vietnamese: "giúp đỡ" },
-  { id: 14, phrase: "开车", pinyin: "kāi chē", vietnamese: "lái xe" },
-  { id: 15, phrase: "打包", pinyin: "dǎ bāo", vietnamese: "gói mang về" },
-  { id: 16, phrase: "打开", pinyin: "dǎ kāi", vietnamese: "mở ra" },
-  { id: 17, phrase: "打车", pinyin: "dǎ chē", vietnamese: "gọi xe / bắt taxi" },
-  { id: 18, phrase: "放学", pinyin: "fàng xué", vietnamese: "tan học" },
-  { id: 19, phrase: "爱好", pinyin: "ài hào", vietnamese: "sở thích" },
-  { id: 20, phrase: "白天", pinyin: "bái tiān", vietnamese: "ban ngày" },
-  { id: 21, phrase: "白饭", pinyin: "bái fàn", vietnamese: "cơm trắng" },
-  { id: 22, phrase: "读书", pinyin: "dú shū", vietnamese: "đọc sách" },
-  { id: 23, phrase: "非常", pinyin: "fēi cháng", vietnamese: "rất" },
-  { id: 24, phrase: "飞机", pinyin: "fēi jī", vietnamese: "máy bay" },
-  { id: 25, phrase: "饭店", pinyin: "fàn diàn", vietnamese: "nhà hàng / khách sạn" },
-  { id: 26, phrase: "高兴", pinyin: "gāo xìng", vietnamese: "vui vẻ" },
+export interface Phrase {
+  id: number;
+  phrase: string;
+  pinyin: string;
+  vietnamese: string;
+}
+
+export interface PhraseListTableMeta {
+  id: number;
+  list: Phrase[];
+}
+
+export const phraseListTable: PhraseListTableMeta[] = [
+  {
+    id: 1,
+    list: [
+      { id: 1, phrase: "老师", pinyin: "lǎo shī", vietnamese: "giáo viên" },
+      { id: 2, phrase: "奶奶", pinyin: "nǎi nai", vietnamese: "bà nội" },
+      { id: 3, phrase: "早上", pinyin: "zǎo shang", vietnamese: "buổi sáng" },
+      { id: 4, phrase: "学生", pinyin: "xué sheng", vietnamese: "học sinh" },
+    ],
+  },
+  {
+    id: 2,
+    list: [
+      { id: 1, phrase: "发现", pinyin: "fā xiàn", vietnamese: "phát hiện" },
+      { id: 2, phrase: "海边", pinyin: "hǎi biān", vietnamese: "bờ biển" },
+      { id: 3, phrase: "护照", pinyin: "hù zhào", vietnamese: "hộ chiếu" },
+      { id: 4, phrase: "画家", pinyin: "huà jiā", vietnamese: "họa sĩ" },
+      { id: 5, phrase: "欢迎", pinyin: "huān yíng", vietnamese: "hoan nghênh" },
+      { id: 6, phrase: "加油", pinyin: "jiā yóu", vietnamese: "cố lên" },
+      { id: 7, phrase: "见过", pinyin: "jiàn guo", vietnamese: "đã gặp" },
+      { id: 8, phrase: "节日", pinyin: "jié rì", vietnamese: "ngày lễ" },
+      { id: 9, phrase: "开心", pinyin: "kāi xīn", vietnamese: "vui vẻ" },
+      { id: 10, phrase: "可爱", pinyin: "kě ài", vietnamese: "đáng yêu" },
+      { id: 11, phrase: "空气", pinyin: "kōng qì", vietnamese: "không khí" },
+      { id: 12, phrase: "前年", pinyin: "qián nián", vietnamese: "năm kia" },
+      { id: 13, phrase: "礼物", pinyin: "lǐ wù", vietnamese: "quà tặng" },
+      { id: 14, phrase: "流利", pinyin: "liú lì", vietnamese: "lưu loát" },
+      { id: 15, phrase: "拿到", pinyin: "ná dào", vietnamese: "nhận được" },
+      { id: 16, phrase: "认为", pinyin: "rèn wéi", vietnamese: "cho rằng" },
+      { id: 17, phrase: "入口", pinyin: "rù kǒu", vietnamese: "lối vào" },
+      { id: 18, phrase: "爱好", pinyin: "ài hào", vietnamese: "sở thích" },
+    ],
+  },
 ];

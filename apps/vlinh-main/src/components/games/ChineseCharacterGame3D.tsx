@@ -4,6 +4,7 @@ import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js";
 import { gameTexts } from "../../config/gameTexts";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import ZhouZiSongTi_Regular from '../../assets/fonts/ZhouZiSongTi_Regular.json?url'
 
 interface TextBlock {
   id: number;
@@ -84,7 +85,7 @@ const ChineseCharacterGame3D: React.FC = () => {
 
     // 创建文字几何体
     const loader = new FontLoader();
-    loader.load("/fonts/ZhouZiSongTi_Regular.json", (font) => {
+    loader.load(ZhouZiSongTi_Regular, (font) => {
       // 创建文字框区域的容器
       const containerWidth = gridSize * spacing;
       const containerHeight = gridSize * spacing;

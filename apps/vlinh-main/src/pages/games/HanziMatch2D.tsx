@@ -1,15 +1,16 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import ChineseCharacterGame2D from "../../components/games/ChineseCharacterGame2D";
+import { phraseListTable } from "../../config/gameTexts";
 
 const HanziMatch2D: React.FC = () => {
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">汉字匹配游戏</h1>
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <ChineseCharacterGame2D />
-      </div>
-    </div>
-  );
+  const { id } = useParams<{ id: string }>();
+  const gameId = parseInt(id || "0");
+  const phrases =
+    phraseListTable.find((item) => item.id === gameId)?.list ||
+    phraseListTable[0].list;
+
+  return <ChineseCharacterGame2D phrases={phrases} />;
 };
 
 export default HanziMatch2D;
