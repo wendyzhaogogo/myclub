@@ -17,7 +17,7 @@ const HanziMatch2DList: React.FC = () => {
             className="p-6 transition-shadow bg-white rounded-lg shadow-lg cursor-pointer hover:shadow-xl"
           >
             <h2 className="mb-2 text-xl font-semibold">
-              {t("games.hanziMatch2D.vocabularySet", { id: item.id })}
+              {t("games.hanziMatch2D.vocabularySet", { name: item.name })}
             </h2>
             <p className="text-gray-600">
               {t("games.hanziMatch2D.vocabularyCount", { count: item.list.length })}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import * as PIXI from "pixi.js";
-import { Phrase } from "../../config/gameTexts";
+import { PhraseListTableMeta } from "../../config/gameTexts";
 import { openWindow as newOpenWindow } from "../../utils/env";
 import { useTranslation } from "react-i18next";
 
@@ -10,7 +10,7 @@ interface TextBlock {
 }
 
 interface ChineseCharacterGame2DProps {
-  phrases: Phrase[];
+  phraseListTableMeta: PhraseListTableMeta;
 }
 
 class ChineseCharacterGame {
@@ -30,15 +30,19 @@ class ChineseCharacterGame {
   private rows: number = 0;
   private slotContents: (PIXI.Container | null)[] = [];
   private matchedPhrases: string[] = [];
-  private gameTexts: Phrase[] = [];
+  private phraseListTableMeta: PhraseListTableMeta;
   private gameId: string;
-  private t: (key: string) => string;
+  private t: ReturnType<typeof useTranslation>["t"];
 
-  constructor(container: HTMLDivElement, phrases: Phrase[], t: (key: string) => string) {
+  constructor(
+    container: HTMLDivElement,
+    phraseListTableMeta: PhraseListTableMeta,
+    t: ReturnType<typeof useTranslation>["t"]
+  ) {
     this.container = container;
     this.app = new PIXI.Application();
-    this.gameTexts = phrases;
-    this.gameId = this.gameTexts[0]?.id.toString() || "1";
+    this.phraseListTableMeta = phraseListTableMeta;
+    this.gameId = this.phraseListTableMeta.list[0]?.id.toString() || "1";
     this.t = t;
   }
 
@@ -55,7 +59,7 @@ class ChineseCharacterGame {
     const availableHeight = maxHeight - slotAreaHeight - 2 * this.MARGIN;
 
     // 计算所有字符的总数
-    const totalBlocks = this.gameTexts.reduce(
+    const totalBlocks = this.phraseListTableMeta.list.reduce(
       (sum, phrase) => sum + phrase.phrase.length,
       0
     );
@@ -149,7 +153,7 @@ class ChineseCharacterGame {
       .join("");
 
     // 检查是否匹配任何词组
-    for (const phraseItem of this.gameTexts) {
+    for (const phraseItem of this.phraseListTableMeta.list) {
       const phrase = phraseItem.phrase;
       if (this.matchedPhrases.includes(phrase)) continue; // 跳过已匹配的词组
 
@@ -166,7 +170,9 @@ class ChineseCharacterGame {
           this.matchedPhrases.push(phrase);
 
           // 检查游戏是否结束
-          if (this.matchedPhrases.length === this.gameTexts.length) {
+          if (
+            this.matchedPhrases.length === this.phraseListTableMeta.list.length
+          ) {
             this.showCompletionScreen();
           }
           break;
@@ -241,7 +247,11 @@ class ChineseCharacterGame {
     requestAnimationFrame(animate);
   }
 
-  private animateToSlot(block: PIXI.Container, slot: PIXI.Container, onComplete?: () => void) {
+  private animateToSlot(
+    block: PIXI.Container,
+    slot: PIXI.Container,
+    onComplete?: () => void
+  ) {
     const startX = block.x;
     const startY = block.y;
     const endX = slot.x;
@@ -250,7 +260,7 @@ class ChineseCharacterGame {
     const startTime = performance.now();
 
     // 禁用所有文本块的交互性
-    this.textBlocks.forEach(block => {
+    this.textBlocks.forEach((block) => {
       block.interactive = false;
       block.cursor = "default";
     });
@@ -282,7 +292,7 @@ class ChineseCharacterGame {
         requestAnimationFrame(animate);
       } else {
         // 动画完成后，只重新启用未放置的文本块的交互性
-        this.textBlocks.forEach(block => {
+        this.textBlocks.forEach((block) => {
           if (!(block as any).isPlaced) {
             block.interactive = true;
             block.cursor = "pointer";
@@ -376,7 +386,7 @@ class ChineseCharacterGame {
 
     this.textBlocks = [];
 
-    const gameTextsInBlocks: TextBlock[] = this.gameTexts
+    const gameTextsInBlocks: TextBlock[] = this.phraseListTableMeta.list
       .map((item) => item.phrase.split(""))
       .flat()
       .map((char, index) => ({
@@ -463,7 +473,9 @@ class ChineseCharacterGame {
         }
 
         // 找到第一个空槽的位置
-        const emptySlotIndex = this.slotContents.findIndex(slot => slot === null);
+        const emptySlotIndex = this.slotContents.findIndex(
+          (slot) => slot === null
+        );
         if (emptySlotIndex !== -1) {
           const targetSlot = this.slots[emptySlotIndex];
           this.animateToSlot(container, targetSlot);
@@ -515,7 +527,9 @@ class ChineseCharacterGame {
 
     // 创建恭喜文字
     const congratsText = new PIXI.BitmapText({
-      text: this.t("games.hanziMatch2D.congratulations"),
+      text: this.t("games.hanziMatch2D.congratulations", {
+        name: this.phraseListTableMeta.name,
+      }),
       style: {
         fontFamily: "Arial",
         fontSize: 48,
@@ -676,7 +690,7 @@ class ChineseCharacterGame {
 }
 
 const ChineseCharacterGame2D: React.FC<ChineseCharacterGame2DProps> = ({
-  phrases,
+  phraseListTableMeta,
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -691,7 +705,7 @@ const ChineseCharacterGame2D: React.FC<ChineseCharacterGame2DProps> = ({
     const initGame = async () => {
       try {
         setIsLoading(true);
-        game = new ChineseCharacterGame(container, phrases, t);
+        game = new ChineseCharacterGame(container, phraseListTableMeta, t);
         await game.init();
       } catch (error) {
         console.error("Failed to initialize game:", error);
@@ -708,7 +722,7 @@ const ChineseCharacterGame2D: React.FC<ChineseCharacterGame2DProps> = ({
         game = null;
       }
     };
-  }, [phrases, t]);
+  }, [phraseListTableMeta, t]);
 
   return (
     <div className="relative w-full h-full">

@@ -6,11 +6,10 @@ import { phraseListTable } from "../../config/gameTexts";
 const HanziMatch2D: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const gameId = parseInt(id || "0");
-  const phrases =
-    phraseListTable.find((item) => item.id === gameId)?.list ||
-    phraseListTable[0].list;
+  const meta =
+    phraseListTable.find((item) => item.id === gameId) || phraseListTable[0];
 
-  return <ChineseCharacterGame2D phrases={phrases} />;
+  return <ChineseCharacterGame2D phraseListTableMeta={meta} />;
 };
 
 export default HanziMatch2D;

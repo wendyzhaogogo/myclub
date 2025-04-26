@@ -83,9 +83,9 @@
       "title": "Hanzi Match 2D",
       "description": "Match Chinese characters to form words in this interactive 2D game. Test your vocabulary knowledge and improve your Chinese character recognition skills.",
       "loading": "Loading...",
-      "congratulations": "Congratulations! You're amazing!",
+      "congratulations": "Congratulations!\nYou've mastered {{name}}!",
       "learnWords": "Let's Learn These Words",
-      "vocabularySet": "Vocabulary Set {{id}}",
+      "vocabularySet": "{{name}}",
       "vocabularyCount": "{{count}} words"
     },
     "hanziMatch3D": {
@@ -93,7 +93,7 @@
       "description": "Explore and interact with Chinese characters in a 3D environment. Click on characters to see them rotate and learn their meanings in an immersive way.",
       "moves": "Moves",
       "restart": "Restart",
-      "complete": "Congratulations! You completed the game in {{moves}} moves!"
+      "complete": "Congratulations! You've mastered the {{name}} vocabulary set in {{moves}} moves!"
     }
   }
 }

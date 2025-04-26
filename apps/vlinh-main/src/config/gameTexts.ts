@@ -41,12 +41,14 @@ export interface Phrase {
 
 export interface PhraseListTableMeta {
   id: number;
+  name: string;
   list: Phrase[];
 }
 
 export const phraseListTable: PhraseListTableMeta[] = [
   {
     id: 1,
+    name: "Basic Greetings",
     list: [
       {
         id: 1,
@@ -112,6 +114,7 @@ export const phraseListTable: PhraseListTableMeta[] = [
   },
   {
     id: 2,
+    name: "Fruits",
     list: [
       {
         id: 1,
@@ -177,6 +180,7 @@ export const phraseListTable: PhraseListTableMeta[] = [
   },
   {
     id: 3,
+    name: "Food and Drinks",
     list: [
       {
         id: 1,
@@ -226,6 +230,138 @@ export const phraseListTable: PhraseListTableMeta[] = [
         pinyin: "kě lè",
         vietnamese: "Coca",
       },
+    ],
+  },
+  {
+    id: 4,
+    name: "Shopping and Commerce",
+    list: [
+      {
+        id: 1,
+        phrase: "商品",
+        pinyin: "shāng pǐn",
+        vietnamese: "hàng hóa",
+      },
+      {
+        id: 2,
+        phrase: "价格",
+        pinyin: "jià gé",
+        vietnamese: "giá cả",
+      },
+      {
+        id: 3,
+        phrase: "便宜",
+        pinyin: "pián yi",
+        vietnamese: "rẻ",
+      },
+      {
+        id: 4,
+        phrase: "付款",
+        pinyin: "fù kuǎn",
+        vietnamese: "thanh toán",
+      },
+      {
+        id: 5,
+        phrase: "支付",
+        pinyin: "zhī fù",
+        vietnamese: "trả tiền",
+      },
+      {
+        id: 6,
+        phrase: "找钱",
+        pinyin: "zhǎo qián",
+        vietnamese: "trả lại tiền thừa",
+      },
+      {
+        id: 7,
+        phrase: "收据",
+        pinyin: "shōu jù",
+        vietnamese: "hóa đơn",
+      },
+      {
+        id: 8,
+        phrase: "发票",
+        pinyin: "fā piào",
+        vietnamese: "hóa đơn đỏ",
+      },
+      {
+        id: 9,
+        phrase: "折扣",
+        pinyin: "zhé kòu",
+        vietnamese: "giảm giá",
+      },
+      {
+        id: 10,
+        phrase: "促销",
+        pinyin: "cù xiāo",
+        vietnamese: "khuyến mãi",
+      },
+      {
+        id: 11,
+        phrase: "特价",
+        pinyin: "tè jià",
+        vietnamese: "giá đặc biệt",
+      },
+      {
+        id: 12,
+        phrase: "退货",
+        pinyin: "tuì huò",
+        vietnamese: "trả hàng",
+      },
+      {
+        id: 13,
+        phrase: "换货",
+        pinyin: "huàn huò",
+        vietnamese: "đổi hàng",
+      },
+      {
+        id: 14,
+        phrase: "保修",
+        pinyin: "bǎo xiū",
+        vietnamese: "bảo hành",
+      },
+      {
+        id: 15,
+        phrase: "质量",
+        pinyin: "zhì liàng",
+        vietnamese: "chất lượng",
+      },
+      {
+        id: 16,
+        phrase: "尺寸",
+        pinyin: "chǐ cùn",
+        vietnamese: "kích cỡ",
+      },
+      {
+        id: 17,
+        phrase: "款式",
+        pinyin: "kuǎn shì",
+        vietnamese: "kiểu dáng",
+      },
+      {
+        id: 18,
+        phrase: "现金",
+        pinyin: "xiàn jīn",
+        vietnamese: "tiền mặt",
+      },
+      {
+        id: 19,
+        phrase: "刷卡",
+        pinyin: "shuā kǎ",
+        vietnamese: "quẹt thẻ",
+      },
+      {
+        id: 20,
+        phrase: "网购",
+        pinyin: "wǎng gòu",
+        vietnamese: "mua hàng online",
+      },
+      {
+        id: 21,
+        phrase: "快递",
+        pinyin: "kuài dì",
+        vietnamese: "giao hàng nhanh",
+      }
     ],
   },
 ];
