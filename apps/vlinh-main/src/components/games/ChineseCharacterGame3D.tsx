@@ -17,10 +17,17 @@ class ChineseCharacterGame3DManager {
   private gameTexts: GameText[];
   private sphereRadius: number = 5;
   private explodingBlocks: Set<THREE.Mesh> = new Set();
+  private isAutoRotating: boolean = true;
+  private autoRotationSpeed: number = 0.005;
+  private sphere: THREE.Mesh;
+  private raycaster: THREE.Raycaster;
+  private mouse: THREE.Vector2;
 
   constructor(container: HTMLDivElement, gameTexts: GameText[]) {
     this.container = container;
     this.gameTexts = gameTexts;
+    this.raycaster = new THREE.Raycaster();
+    this.mouse = new THREE.Vector2();
 
     // 创建场景
     this.scene = new THREE.Scene();
@@ -78,11 +85,25 @@ class ChineseCharacterGame3DManager {
       opacity: 0.2,
       side: THREE.DoubleSide
     });
-    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    this.scene.add(sphere);
+    this.sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    this.scene.add(this.sphere);
 
     // 创建球面网格
     this.createSphereGrid();
+
+    // 添加鼠标移动事件监听
+    this.container.addEventListener('mousemove', (event) => {
+      // 计算鼠标在归一化设备坐标中的位置
+      this.mouse.x = (event.clientX / this.container.clientWidth) * 2 - 1;
+      this.mouse.y = -(event.clientY / this.container.clientHeight) * 2 + 1;
+
+      // 更新射线
+      this.raycaster.setFromCamera(this.mouse, this.camera);
+
+      // 检测射线与球体的交点
+      const intersects = this.raycaster.intersectObject(this.sphere);
+      this.isAutoRotating = intersects.length === 0;
+    });
 
     // 添加点击事件监听
     this.container.addEventListener('click', this.handleClick.bind(this));
@@ -264,6 +285,11 @@ class ChineseCharacterGame3DManager {
 
     // 更新控制器
     this.controls.update();
+
+    // 自动旋转
+    if (this.isAutoRotating) {
+      this.scene.rotation.y += this.autoRotationSpeed;
+    }
 
     // 渲染场景
     this.renderer.render(this.scene, this.camera);
